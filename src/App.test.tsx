@@ -1,9 +1,9 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders the Algions Academy landing page', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getAllByText('ALGIONS ACADEMY').length).toBeGreaterThan(0);
+  expect(screen.getByText(/Run your entire school from one calm/i)).toBeInTheDocument();
+  expect(screen.getAllByText('Quick demo login').length).toBeGreaterThan(0);
 });

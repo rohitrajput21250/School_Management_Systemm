@@ -1,46 +1,54 @@
-# Getting Started with Create React App
+# ALGIONS ACADEMY
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ALGIONS is a responsive school operations workspace for administrators, teachers, and guardians. The application now runs as a React client plus a Node/Express API backed by SQLite, with server-side sessions, RBAC, database constraints, transactions, and seeded demo data.
 
-## Available Scripts
+## Local setup
 
-In the project directory, you can run:
+Run these commands from either `E:\School Management System` or
+`E:\School Management System\my-elsewhere-app`. The workspace root forwards
+commands to the application folder.
 
-### `npm start`
+```bash
+npm install
+npm run db:seed
+npm start
+# open http://localhost:3000
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The browser client calls the API at `http://localhost:3001` during local
+development. Keep the API process running alongside the React process. If a
+previous development server is already using port 3000, stop that specific
+process and restart `npm start` so the latest client bundle is loaded.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The demo accounts are shown on the landing page and can be filled with one click:
 
-### `npm test`
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@algions.edu | Admin@123 |
+| Teacher | teacher@algions.edu | Teacher@123 |
+| Guardian | guardian@algions.edu | Guardian@123 |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Architecture
 
-### `npm run build`
+- `src/App.tsx`: accessible landing page, authentication modal, and role portals.
+- `server/db.js`: SQLite schema, foreign keys, indexes, composite uniqueness, migrations-on-start, and deterministic seed data.
+- `server/index.js`: Express API controllers, JWT HTTP-only cookie sessions, RBAC middleware, and transactional payment handling.
+- `src/lib/database.ts`: typed client API adapter with a local fallback for unit tests.
+- `src/components/ui/elsewhere-hero.tsx`: preserved full-bleed hero presentation.
+- `scripts/seed.js`: repeatable `npm run db:seed` seed entrypoint.
+- `docs/ER_DIAGRAM.md`, `docs/API_SPEC.md`, and `docs/TECHNICAL_REPORT.md`: persistence, API, and security design contracts.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+For production, set `DATABASE_PATH` and `SESSION_SECRET` from `.env.example`, replace the SQLite adapter with a managed PostgreSQL/Prisma deployment if required, terminate TLS at the edge, and use a secrets manager. Every service method is enforced server-side; UI controls are not the authorization boundary.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Commands
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm run db:seed
+npm test
+npm run test:api
+npm run build
+```
 
-### `npm run eject`
+## Known limitations
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+The current UI still has a focused subset of the full commercial CRUD surface. A production deployment should add managed PostgreSQL, Prisma migrations, CSRF protection for non-SameSite deployments, rate limiting, email delivery, observability, backups, and object storage for report-card PDFs. Simulated payments intentionally do not contact a payment provider.
