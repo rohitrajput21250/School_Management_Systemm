@@ -492,19 +492,7 @@ export default function ElsewhereHero({
             )}
           </svg>
         </button>
-        <button
-          onClick={toggleMuted}
-          aria-label={muted ? "Turn on ambient sound" : "Mute ambient sound"}
-          style={iconButtonStyle}
-          data-testid="hero-sound-toggle"
-        >
-          <SoundIcon muted={muted} size={18} />
-        </button>
-        {soundHint && (
-          <span className="ew-hint" style={{ color: COL_TEXT, fontSize: 12 }}>
-            {muted ? soundHint : "Sound on"}
-          </span>
-        )}
+        
       </div>
       {signature && (
         <a
