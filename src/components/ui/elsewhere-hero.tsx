@@ -27,8 +27,6 @@ export interface ElsewhereHeroProps {
   headline?: string
   subline?: string
   primaryCta?: ElsewhereLink
-  /** Label of the second button, which turns the soundscape on and off */
-  
   /** Small hint next to the sound button. Set to "" to hide it. */
   soundHint?: string
   signature?: { name: string; url: string } | false
@@ -286,6 +284,7 @@ export default function ElsewhereHero({
   daySrc = DEFAULT_DAY,
   nightSrc = DEFAULT_NIGHT,
   brand = "ALGIONS LAB",
+  links = [],
   navCta = { label: "Get the app", href: "#get" },
   headline = "Less Paperwork. More Time for Education.",
   subline = "Simplify school operations, eliminate manual errors, and keep parents, teachers, and students connected in real time.",
@@ -362,6 +361,7 @@ export default function ElsewhereHero({
 
   return (
     <section
+      id="hero"
       className={className}
       aria-label={brand}
       data-testid="elsewhere-hero"
@@ -420,10 +420,10 @@ export default function ElsewhereHero({
 
       {/* NAVIGATION */}
       <header className="ew-nav" style={{ ...rise(0) }}>
-        <a href="#" className="ew-brand" data-testid="hero-brand">
+        <a href="#hero" className="ew-brand" data-testid="hero-brand">
           {brand}
         </a>
-        {/* <nav aria-label={brand} className="ew-links">
+        <nav aria-label={brand} className="ew-links">
           {links.map((l) => (
             <a
               key={l.href + l.label}
@@ -434,7 +434,7 @@ export default function ElsewhereHero({
               {l.label}
             </a>
           ))}
-        </nav> */}
+        </nav>
         {navCta && (
           <a href={navCta.href} className="ew-glass ew-pill ew-small" data-testid="hero-nav-cta">
             {navCta.label}
@@ -492,8 +492,31 @@ export default function ElsewhereHero({
             )}
           </svg>
         </button>
-     
+        <button
+          onClick={toggleMuted}
+          aria-label={muted ? "Turn on ambient sound" : "Mute ambient sound"}
+          style={iconButtonStyle}
+          data-testid="hero-sound-toggle"
+        >
+          <SoundIcon muted={muted} size={18} />
+        </button>
+        {soundHint && (
+          <span className="ew-hint" style={{ color: COL_TEXT, fontSize: 12 }}>
+            {muted ? soundHint : "Sound on"}
+          </span>
+        )}
       </div>
+      {signature && (
+        <a
+          href={signature.url}
+          className="ew-signature"
+          target="_blank"
+          rel="noreferrer"
+          data-testid="hero-signature"
+        >
+          {signature.name}
+        </a>
+      )}
     </section>
   )
 }
