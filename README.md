@@ -20,6 +20,20 @@ development. Keep the API process running alongside the React process. If a
 previous development server is already using port 3000, stop that specific
 process and restart `npm start` so the latest client bundle is loaded.
 
+## Deployment
+
+Deploy the React app and Express API as separate services when using Netlify
+and Render:
+
+- On Render, run the API with `npm run server` and set `NODE_ENV=production`,
+  `SESSION_SECRET`, and `DATABASE_PATH`.
+- On Netlify, set `REACT_APP_API_URL` to the complete Render API URL ending in
+  `/api`, for example `https://your-api.onrender.com/api`, then trigger a new
+  deploy. React environment variables are embedded during the build.
+- On Render, set `FRONTEND_URL` to the exact Netlify site URL and redeploy the
+  API. Production sessions use secure cross-site cookies, so the frontend must
+  use HTTPS.
+
 The demo accounts are shown on the landing page and can be filled with one click:
 
 | Role | Email | Password |

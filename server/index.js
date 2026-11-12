@@ -8,7 +8,7 @@ const db = require("./db")
 
 const app = express()
 const secret = process.env.SESSION_SECRET || "development-only-change-me"
-app.use(cors({ origin: true, credentials: true }))
+app.use(cors({ origin: process.env.FRONTEND_URL || true, credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
 const publicUser = row => ({ id: row.id, email: row.email, name: row.name, role: row.role })
@@ -42,7 +42,13 @@ app.post("/api/auth/login", (req, res) => {
   const row = db.prepare("SELECT * FROM users WHERE email=?").get(req.body.email)
   if (!row || !bcrypt.compareSync(req.body.password || "", row.password_hash)) return fail(res, 401, "Email or password is incorrect.")
   const token = jwt.sign({ id: row.id, email: row.email, role: row.role, name: row.name }, secret, { expiresIn: "8h" })
-  res.cookie("algions_session", token, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", maxAge: 8 * 60 * 60 * 1000 })
+  const isProduction = process.env.NODE_ENV === "production"
+  res.cookie("algions_session", token, {
+    httpOnly: true,
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction,
+    maxAge: 8 * 60 * 60 * 1000,
+  })
   res.json(publicUser(row))
 })
 app.post("/api/auth/logout", (req, res) => { res.clearCookie("algions_session"); res.status(204).end() })
