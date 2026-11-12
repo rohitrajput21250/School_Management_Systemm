@@ -23,11 +23,16 @@ process and restart `npm start` so the latest client bundle is loaded.
 ## Deployment
 
 Deploy the React app and Express API as separate services when using Netlify
-and Render:
+and Render, or deploy both together on Netlify using the included Function
+wrapper:
 
-- On Render, run the API with `npm run server` and set `NODE_ENV=production`,
-  `SESSION_SECRET`, and `DATABASE_PATH`.
-- On Netlify, set `REACT_APP_API_URL` to the complete Render API URL ending in
+- For the Netlify-only setup, keep `REACT_APP_API_URL` unset. The included
+  `netlify.toml` rewrites `/api/*` to the Express Netlify Function. Set
+  `SESSION_SECRET` and `NODE_ENV=production` in Netlify environment variables,
+  then trigger a new deploy.
+- For the separate-service setup, run the API on Render with `npm run server`
+  and set `NODE_ENV=production`, `SESSION_SECRET`, and `DATABASE_PATH`. On
+  Netlify, set `REACT_APP_API_URL` to the complete Render API URL ending in
   `/api`, for example `https://your-api.onrender.com/api`, then trigger a new
   deploy. React environment variables are embedded during the build.
 - On Render, set `FRONTEND_URL` to the exact Netlify site URL and redeploy the
